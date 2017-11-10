@@ -1,0 +1,128 @@
+\documentclass{ecscw2007}
+
+\usepackage[T1]{fontenc}
+\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+
+\usepackage{acronym} % \ac[p], \acl[p], \acs[p], \acf[p]
+\usepackage{subcaption}
+\captionsetup{subrefformat=parens}
+
+\usepackage[inline]{enumitem}
+
+\usepackage{graphicx}
+\usepackage{color}
+\AtBeginDocument{
+\definecolor{pdfurlcolor}{rgb}{0,0,0}
+\definecolor{pdfcitecolor}{rgb}{0,0,0}
+\definecolor{pdflinkcolor}{rgb}{0,0,0}
+\definecolor{light}{gray}{.85}
+\definecolor{vlight}{gray}{.95}
+\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+}
+\usepackage[colorlinks=true,
+            citecolor=pdfcitecolor,
+            urlcolor=pdfurlcolor,
+            linkcolor=pdflinkcolor,
+            pdfborder={0 0 0}
+            ]{hyperref}
+\usepackage{url}
+\urlstyle{rm}
+\usepackage{paralist}
+\usepackage{booktabs}
+
+% Acronyms
+% --------
+\acrodef{CRDT}[CRDT]{Conflict-free Replicated Data type}
+\acrodefplural{CRDT}[CRDTs]{Conflict-free Replicated Data types}
+
+% Meta-Data
+% ---------
+\title{Efficient (re)naming in \acp{CRDT}}
+\author{Matthieu Nicolas, Gérald Oster and Olivier Perrin}
+\affiliation{Inria, F-54600,
+  Université de Lorraine, LORIA, F-54506,
+  CNRS, F-54506}
+\email{Contact Author: matthieu.nicolas@inria.fr}
+
+\hypersetup{pdftitle={Efficient (re)naming in CRDT},
+  pdfsubject={},
+  pdfkeywords={Data replication, CRDT},
+  pdfauthor={M. Nicolas, O. Perrin, G. Oster}}
+
+\clubpenalty=10000
+\widowpenalty=10000
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\pagestyle{empty}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+
+% Context
+% - Distributed system: several nodes share and edit a data structure
+% - CAP theorem: can not ensure strong consistency and availability in a partition-tolerant system
+% - Eventual consistency: sacrifize consistency to ensure availability in case of network failure
+% - Necessity of a conflict resolution mechanism
+
+In order to design large scale distributed systems, the literature and companies increasingly adopt the optimistic replication model known as eventual consistency to replicate data among nodes.
+This consistency model allows replicas to temporarily diverge to be able to ensure high availability.
+Each node owning a copy of the data can edit it without any kind of coordination with other nodes, before propagating the changes to others.
+A conflict resolution mechanism is thus required to handle updates generated in parallel by different replicas.
+
+% CRDT
+% - Mimic behavior of traditional data structures
+% - Designed for a distributed usage
+% - Rely usually on identifiers attached to elements
+
+An approach which gains in popularity during recent years proposes to define \acfp{CRDT}.
+These data structures behave as traditional ones, like the \emph{Set} or the \emph{Sequence} data structures, but are designed for a distributed usage.
+Their specification ensures that concurrent changes are resolved deterministically and that replicas converge eventually after observing all updates.
+
+% Constraints on identifiers
+% - Several constraints may exist on identifiers: globally unique, belonging to a dense set
+% - Implementations (literature ?) do not provide identifiers with fixed size: depend on number of nodes...
+
+To achieve convergence, \acp{CRDT} proposed in the literature mostly rely on identifiers to reference updated elements.
+To be globally unique, element identifiers often include the identifier of the node which generates them.
+But, since node identifiers grow as new nodes join the system, element identifiers have to grow proportionally.
+Furthermore, element identifiers have to comply to additional constraints according to the \ac{CRDT}, which may result in the acceleration of their growth.
+
+% First, identifiers are required to be globally unique for the lifetime of the data structure.
+% For example, they may also be used to represent the order between updates.
+% In that case, since the number of updates should not be limited, the identifiers have to grow to continue to satisfy this constraint.
+
+% Research problem and questions
+% - Size of metadata grows until eventually exceed the size used by data itself
+% - How can we provide more efficient identifiers while still complying to their set of constraints?
+% - How can we provide renaming mechanisms reducing the size of identifiers at some point?
+
+Hence, since the size of element identifiers is not bounded, the size of metadata attached to each element increases over time.
+It thus exceeds more and more the size of data itself.
+This impedes the usage of \acp{CRDT} since nodes have to broadcast and store metadata, causing the application's performances to decrease over time.
+
+The goal of this PhD is to address this issue by
+\begin{enumerate*}
+  \item proposing more efficient specifications of identifiers according to their set of constraints,
+  \item proposing mechanisms to rename identifiers to reduce their size.
+\end{enumerate*}
+
+% Next steps
+% - Look for a survey (or build one) on \ac{CRDT} identifiers
+%   - Which constraints on identifiers are found in the literature?
+%   - How are these constraints addressed?
+% - Can we instead provide \acp{CRDT} not relying on identifiers?
+\end{abstract}
+
+\bibliography{ref-selected}
+\bibliographystyle{ecscw2007}
+
+\end{document}
+
