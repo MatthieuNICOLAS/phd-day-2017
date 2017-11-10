@@ -75,16 +75,16 @@
 In order to design large scale distributed systems, the literature and companies increasingly adopt the optimistic replication model known as eventual consistency to replicate data among nodes.
 This consistency model allows replicas to temporarily diverge to be able to ensure high availability.
 Each node owning a copy of the data can edit it without any kind of coordination with other nodes, before propagating the changes to others.
-A conflict resolution mechanism is thus required to handle updates generated in parallel by different replicas.
+A conflict resolution mechanism is however required to handle updates generated in parallel by different replicas.
 
 % CRDT
 % - Mimic behavior of traditional data structures
 % - Designed for a distributed usage
 % - Rely usually on identifiers attached to elements
 
-An approach which gains in popularity during recent years proposes to define \acfp{CRDT}.
+An approach which gains in popularity since a few years proposes to define \acfp{CRDT}.
 These data structures behave as traditional ones, like the \emph{Set} or the \emph{Sequence} data structures, but are designed for a distributed usage.
-Their specification ensures that concurrent changes are resolved deterministically and that replicas converge eventually after observing all updates.
+Their specification ensures that concurrent changes are resolved deterministically and that replicas eventually converge after observing all updates.
 
 % Constraints on identifiers
 % - Several constraints may exist on identifiers: globally unique, belonging to a dense set
@@ -104,9 +104,9 @@ Furthermore, element identifiers have to comply to additional constraints accord
 % - How can we provide more efficient identifiers while still complying to their set of constraints?
 % - How can we provide renaming mechanisms reducing the size of identifiers at some point?
 
-Hence, since the size of element identifiers is not bounded, the size of metadata attached to each element increases over time.
+Hence, since the size of identifiers is not bounded, the size of metadata attached to each element increases over time.
 It thus exceeds more and more the size of data itself.
-This impedes the usage of \acp{CRDT} since nodes have to broadcast and store metadata, causing the application's performances to decrease over time.
+This impedes the adoption of \acp{CRDT} since nodes have to broadcast and store metadata, causing the application's performances and efficiency to decrease over time.
 
 The goal of this PhD is to address this issue by
 \begin{enumerate*}
